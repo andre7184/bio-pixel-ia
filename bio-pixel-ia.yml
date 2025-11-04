@@ -1,0 +1,29 @@
+name: Bio Pixel IA
+description: Estimativa de altura e peso com IA baseada em proporções visuais do globo ocular.
+columns:
+  - name: Backlog
+    cards:
+      - note: Pesquisar datasets com anotações de olhos e altura/peso reais
+      - note: Estudar modelos de regressão para estimar peso com imagem lateral
+      - note: Testar precisão de MediaPipe vs Dlib
+      - note: Definir critérios mínimos de qualidade para imagens
+
+  - name: To Do
+    cards:
+      - note: Criar script para detectar olhos com MediaPipe
+      - note: Medir diâmetro da íris/globo ocular em pixels
+      - note: Medir altura corporal em pixels
+      - note: Converter proporção ocular-corporal em altura real
+      - note: Criar função para estimar peso com imagem lateral
+      - note: Montar pipeline de entrada para imagem frontal e lateral
+
+  - name: In Progress
+    cards:
+      - note: Testes com imagens reais para validação da escala
+      - note: Ajuste fino da estimativa de peso
+
+  - name: Done
+    cards:
+      - note: Definição do objetivo do projeto
+      - note: Escolha da abordagem baseada em proporção ocular-corporal
+      - note: Identificação das ferramentas principais

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Detecção Ocular</title>
+</head>
+<body>
+    <h1>Envie uma imagem frontal</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Enviar</button>
+    </form>
+
+    {% if result %}
+        <p><strong>Resultado:</strong> {{ result }}</p>
+    {% endif %}
+</body>
+</html>
