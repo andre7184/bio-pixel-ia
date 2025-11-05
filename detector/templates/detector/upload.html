@@ -1,18 +1,175 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-    <title>Detecção Ocular</title>
+    <meta charset="UTF-8">
+    <title>Detector Bio Pixel IA</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background: #f5f5f5; 
+            color: #333; 
+        }
+        h1, h2 { 
+            color: #222; 
+            border-bottom: 2px solid #ccc; 
+            padding-bottom: 5px;
+        }
+        h2 { 
+            margin-top: 30px; 
+        }
+        .container { 
+            max-width: 1000px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            background: #fff; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+        }
+        form { 
+            margin-bottom: 20px; 
+        }
+        button { 
+            background: #007bff; 
+            color: white; 
+            padding: 10px 15px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 16px; 
+        }
+        button:hover { 
+            background: #0056b3; 
+        }
+        
+        /* Bloco de erro que adicionamos */
+        .error { 
+            background: #f8d7da; 
+            color: #721c24; 
+            padding: 10px; 
+            border: 1px solid #f5c6cb; 
+            border-radius: 5px; 
+            margin-bottom: 20px; 
+        }
+        
+        .result-container { 
+            margin-top: 20px; 
+        }
+        
+        /* Div para cada pessoa encontrada */
+        .person-result { 
+            margin-bottom: 30px; 
+            padding: 15px; 
+            background: #fafafa; 
+            border: 1px solid #eee; 
+            border-radius: 6px; 
+        }
+        
+        /* Imagem principal com as linhas */
+        .main-image img { 
+            max-width: 100%; 
+            height: auto; 
+            border: 2px solid #ccc; 
+            border-radius: 6px; 
+        }
+        
+        .images { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 20px; 
+            margin-top: 20px; 
+        }
+        .images div { 
+            text-align: center; 
+        }
+        .images img { 
+            max-width: 300px; 
+            border: 2px solid #ccc; 
+            border-radius: 6px; 
+        }
+        
+        /* Tabela de dados */
+        table { 
+            border-collapse: collapse; 
+            margin-top: 10px; 
+            width: 100%; 
+        }
+        th, td { 
+            border: 1px solid #ccc; 
+            padding: 8px 12px; 
+        }
+        th { 
+            background: #eee; 
+            text-align: left; 
+            width: 150px; 
+        }
+    </style>
 </head>
 <body>
-    <h1>Envie uma imagem frontal</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Enviar</button>
-    </form>
+    <div class="container">
+        <h1>Detector Bio Pixel IA</h1>
 
-    {% if result %}
-        <p><strong>Resultado:</strong> {{ result }}</p>
-    {% endif %}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Analisar Imagem</button>
+        </form>
+
+        {% if error_message %}
+            <div class="error">
+                <strong>Erro:</strong> {{ error_message }}
+            </div>
+        {% endif %}
+
+        <div class="result-container">
+            
+            {% if pessoas and pessoas.0.body_url %}
+                <h2>Análise Completa da Imagem</h2>
+                <div class="main-image">
+                    <img src="{{ pessoas.0.body_url }}" alt="Análise de Corpos">
+                </div>
+            {% endif %}
+
+            {% for p in pessoas %}
+                <div class="person-result">
+                    <h2>Pessoa {{ p.id }}</h2>
+                    <table>
+                        <tr><th>Altura Estimada</th><td>{{ p.altura }}</td></tr>
+                        <tr><th>Idade Estimada</th><td>{{ p.idade_estimativa }}</td></tr>
+                        <tr><th>Faixa Etária</th><td>{{ p.faixa_etaria }}</td></tr>
+                        <tr><th>Cor dos Olhos</th><td>{{ p.cor_olhos }}</td></tr>
+                        <tr><th>Cor do Cabelo</th><td>{{ p.cor_cabelo }}</td></tr>
+                        <tr><th>Escala (mm/px)</th><td>{{ p.escala }}</td></tr>
+                        <tr><th>Íris Direita</th><td>{{ p.iris_direita }}</td></tr>
+                        <tr><th>Íris Esquerda</th><td>{{ p.iris_esquerda }}</td></tr>
+                        <tr><th>Média Íris (px)</th><td>{{ p.media_iris }}</td></tr>
+                        <tr><th>Diferença Olhos</th><td>{{ p.diff_iris }}</td></tr>
+                    </table>
+            
+                    <div class="images">
+                        {% if p.face_url %}
+                        <div>
+                            <h3>Rosto</h3>
+                            <img src="{{ p.face_url }}" alt="Rosto {{ p.id }}">
+                        </div>
+                        {% endif %}
+                        {% if p.eye_right_url %}
+                        <div>
+                            <h3>Olho Direito</h3>
+                            <img src="{{ p.eye_right_url }}" alt="Olho Direito {{ p.id }}">
+                        </div>
+                        {% endif %}
+                        {% if p.eye_left_url %}
+                        <div>
+                            <h3>Olho Esquerdo</h3>
+                            <img src="{{ p.eye_left_url }}" alt="Olho Esquerdo {{ p.id }}">
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
 </body>
 </html>
